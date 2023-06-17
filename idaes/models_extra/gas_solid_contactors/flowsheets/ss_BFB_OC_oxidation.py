@@ -17,6 +17,7 @@ for a methane combustion with iron-oxide case study
 Created: 05/04/2020
 
 Author: Chinedu Okoli
+Kyle O'Malley edits for Cu/Ni/Si/O solid system
 """
 # Import python libraries
 import time
@@ -38,15 +39,15 @@ from idaes.models_extra.gas_solid_contactors.unit_models.bubbling_fluidized_bed 
 )
 
 # Import property packages
-from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.gas_phase_thermo import (
-    GasPhaseParameterBlock,
-)
-from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.solid_phase_thermo import (
-    SolidPhaseParameterBlock,
-)
-from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.hetero_reactions import (
-    HeteroReactionParameterBlock,
-)
+#from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.gas_phase_thermo import (
+#    GasPhaseParameterBlock,)
+#from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.solid_phase_thermo import (
+ #   SolidPhaseParameterBlock,)
+#from idaes.models_extra.gas_solid_contactors.properties.oxygen_iron_OC_oxidation.hetero_reactions import (
+  #  HeteroReactionParameterBlock,)
+from gas_phase_thermo import (  GasPhaseParameterBlock,)
+from solid_phase_thermo_Cu import ( SolidPhaseParameterBlock,)
+from hetero_reactions_Cu import (  HeteroReactionParameterBlock,)
 
 
 # -----------------------------------------------------------------------------
@@ -108,9 +109,12 @@ def main():
     # components [see the solids property package])
     m.fs.BFB.solid_inlet.particle_porosity[0].fix(0.27)
     m.fs.BFB.solid_inlet.temperature[0].fix(1173.9)  # K
-    m.fs.BFB.solid_inlet.mass_frac_comp[0, "Fe2O3"].fix(0.244162011502)
-    m.fs.BFB.solid_inlet.mass_frac_comp[0, "Fe3O4"].fix(0.201998299487)
-    m.fs.BFB.solid_inlet.mass_frac_comp[0, "Al2O3"].fix(0.553839689011)
+    #m.fs.BFB.solid_inlet.mass_frac_comp[0, "Fe2O3"].fix(0.244162011502)
+   # m.fs.BFB.solid_inlet.mass_frac_comp[0, "Fe3O4"].fix(0.201998299487)
+    #m.fs.BFB.solid_inlet.mass_frac_comp[0, "Al2O3"].fix(0.553839689011)
+    m.fs.BFB.solid_inlet.mass_frac_comp[0, "CuO"].fix(0.244162011502) #Fe2O3+3 Fe
+    m.fs.BFB.solid_inlet.mass_frac_comp[0, "Cu2O"].fix(0.201998299487) #Fe3O4+2.7 Fe, so reduced state (Cu2O)
+    m.fs.BFB.solid_inlet.mass_frac_comp[0, "SiO2"].fix(0.553839689011)
     # ---------------------------------------------------------------------
     # Initialize reactor
 
@@ -136,9 +140,12 @@ def main():
         "particle_porosity": blk.solid_inlet.particle_porosity[0].value,
         "temperature": blk.solid_inlet.temperature[0].value,
         "mass_frac": {
-            "Fe2O3": blk.solid_inlet.mass_frac_comp[0, "Fe2O3"].value,
-            "Fe3O4": blk.solid_inlet.mass_frac_comp[0, "Fe3O4"].value,
-            "Al2O3": blk.solid_inlet.mass_frac_comp[0, "Al2O3"].value,
+            #  "Fe2O3": blk.solid_inlet.mass_frac_comp[0, "Fe2O3"].value,
+            #"Fe3O4": blk.solid_inlet.mass_frac_comp[0, "Fe3O4"].value,
+            #"Al2O3": blk.solid_inlet.mass_frac_comp[0, "Al2O3"].value,
+           "CuO": blk.solid_inlet.mass_frac_comp[0, "CuO"].value,
+           "Cu2O": blk.solid_inlet.mass_frac_comp[0, "Cu2O"].value,
+           "SiO2": blk.solid_inlet.mass_frac_comp[0, "SiO2"].value,
         },
     }
 

@@ -14,6 +14,7 @@
 This package provides the necessary constraints for solid phase properties of
 an iron-based oxygen carrier
 Components - Fe2O3, Fe3O4, Al2O3
+*** May 3rd 2023 KO adding CuO, Cu2O, NiO, Ni, SiO2
 
 Equations written in this model were primarily derived from:
 National Institute of Standards and Technology, NIST Chemistry WebBook,
@@ -88,15 +89,21 @@ class PhysicalParameterData(PhysicalParameterBlock):
         self.Sol = SolidPhase()
 
         # Create Component objects
-        self.Fe2O3 = Component()
-        self.Fe3O4 = Component()
-        self.Al2O3 = Component()
+       # self.Fe2O3 = Component()
+        #self.Fe3O4 = Component()
+        #self.Al2O3 = Component()
+        self.CuO = Component()
+        self.Cu2O = Component()
+        #self.NiO = Component()
+        #self.Ni = Component()
+        self.SiO2 = Component()
 
         # -------------------------------------------------------------------------
         # Pure solid component properties
 
         # Mol. weights of solid components - units = kg/mol. ref: NIST webbook
-        mw_comp_dict = {"Fe2O3": 0.15969, "Fe3O4": 0.231533, "Al2O3": 0.10196}
+        mw_comp_dict = {#"Fe2O3": 0.15969, "Fe3O4": 0.231533, "Al2O3": 0.10196,
+                        "CuO": 0.07955, "Cu2O": 0.14309, "SiO2": 0.060084} #"NiO": 0.07469, "Ni" : 0.05869,
         self.mw_comp = Param(
             self.component_list,
             mutable=False,
@@ -106,7 +113,10 @@ class PhysicalParameterData(PhysicalParameterBlock):
         )
 
         # Skeletal density of solid components - units = kg/m3. ref: NIST
-        dens_mass_comp_skeletal_dict = {"Fe2O3": 5250, "Fe3O4": 5000, "Al2O3": 3987}
+        dens_mass_comp_skeletal_dict = {#"Fe2O3": 5250, "Fe3O4": 5000, "Al2O3": 3987,
+                                       #05.03.23 KO Skeletal density is measured via pycnometer measurement of
+                                       #   bulk powder sample. Cannot distinguish between Cu/Ni/Si densities
+                                       "CuO": 5250, "Cu2O": 5000, "SiO2": 3987} #NOT ACCURATE "NiO": 4000, "Ni" : 4000,
         self.dens_mass_comp_skeletal = Param(
             self.component_list,
             mutable=False,
@@ -124,31 +134,57 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # H_comp = H - H(298.15) = A*T + B*T^2/2 + C*T^3/3 +
         # D*T^4/4 - E/T + F - H where T = Temp (K)/1000 and H_comp = (kJ/mol)
         cp_param_dict = {
-            ("Al2O3", 1): 102.4290,
-            ("Al2O3", 2): 38.74980,
-            ("Al2O3", 3): -15.91090,
-            ("Al2O3", 4): 2.628181,
-            ("Al2O3", 5): -3.007551,
-            ("Al2O3", 6): -1717.930,
-            ("Al2O3", 7): 146.9970,
-            ("Al2O3", 8): -1675.690,
-            ("Fe3O4", 1): 200.8320000,
-            ("Fe3O4", 2): 1.586435e-7,
-            ("Fe3O4", 3): -6.661682e-8,
-            ("Fe3O4", 4): 9.452452e-9,
-            ("Fe3O4", 5): 3.18602e-8,
-            ("Fe3O4", 6): -1174.1350000,
-            ("Fe3O4", 7): 388.0790000,
-            ("Fe3O4", 8): -1120.8940000,
-            ("Fe2O3", 1): 110.9362000,
-            ("Fe2O3", 2): 32.0471400,
-            ("Fe2O3", 3): -9.1923330,
-            ("Fe2O3", 4): 0.9015060,
-            ("Fe2O3", 5): 5.4336770,
-            ("Fe2O3", 6): -843.1471000,
-            ("Fe2O3", 7): 228.3548000,
-            ("Fe2O3", 8): -825.5032000,
+           # ("Al2O3", 1): 102.4290,
+            #("Al2O3", 2): 38.74980,
+            #("Al2O3", 3): -15.91090,
+            #("Al2O3", 4): 2.628181,
+            #("Al2O3", 5): -3.007551,
+            #("Al2O3", 6): -1717.930,
+            #("Al2O3", 7): 146.9970,
+            #("Al2O3", 8): -1675.690,
+            #("Fe3O4", 1): 200.8320000,
+            #("Fe3O4", 2): 1.586435e-7,
+            #("Fe3O4", 3): -6.661682e-8,
+            #("Fe3O4", 4): 9.452452e-9,
+            #("Fe3O4", 5): 3.18602e-8,
+            #("Fe3O4", 6): -1174.1350000,
+            #("Fe3O4", 7): 388.0790000,
+            #("Fe3O4", 8): -1120.8940000,
+            #("Fe2O3", 1): 110.9362000,
+            #("Fe2O3", 2): 32.0471400,
+            #("Fe2O3", 3): -9.1923330,
+            #("Fe2O3", 4): 0.9015060,
+            #("Fe2O3", 5): 5.4336770,
+            #("Fe2O3", 6): -843.1471000,
+            #("Fe2O3", 7): 228.3548000,
+            #("Fe2O3", 8): -825.5032000,
+            ("SiO2", 1): 102.4290, #ALUMINA VALUES
+            ("SiO2", 2): 38.74980,
+            ("SiO2", 3): -15.91090,
+            ("SiO2", 4): 2.628181,
+            ("SiO2", 5): -3.007551,
+            ("SiO2", 6): -1717.930,
+            ("SiO2", 7): 146.9970,
+            ("SiO2", 8): -1675.690,
+            ("CuO", 1): 48.56494,
+	        ("CuO", 2): 7.498607,
+ 	        ("CuO", 3): -0.055980,
+ 	        ("CuO", 4): 0.013851,
+ 	        ("CuO", 5): -0.760082,
+ 	        ("CuO", 6): -173.4272,
+ 	        ("CuO", 7): 94.85128,
+ 	        ("CuO", 8): -156.0632,
+            ("Cu2O", 1): 95.39980,
+ 	        ("Cu2O", 2):4.892490,
+ 	        ("Cu2O", 3):-1.982781,
+ 	        ("Cu2O", 4):0.284974,
+ 	        ("Cu2O", 5):1.522601,
+ 	        ("Cu2O", 6):-155.9270,
+ 	        ("Cu2O", 7):213.9270,
+ 	        ("Cu2O", 8):-111.9950,
         }
+        
+        # 05.03.23 KO Cu2O T range is  1517. - 2000 K (1100C low end) https://webbook.nist.gov/cgi/cbook.cgi?ID=C1317391&Units=SI&Mask=2#Thermo-Condensed
         self.cp_param_1 = Param(
             self.component_list,
             mutable=False,
@@ -208,9 +244,12 @@ class PhysicalParameterData(PhysicalParameterBlock):
 
         # Std. heat of formation of comp. - units = J/(mol comp) - ref: NIST
         enth_mol_form_comp_dict = {
-            "Fe2O3": -825.5032e3,
-            "Fe3O4": -1120.894e3,
-            "Al2O3": -1675.690e3,
+           #Fe2O3": -825.5032e3,
+            #"Fe3O4": -1120.894e3,
+            #"Al2O3": -1675.690e3,"""
+            "CuO": -156.06e3,
+            "Cu2O": -170.71e3,
+            "SiO2": -1675.690e3, #VALUE FOR ALUMINA
         }
         self.enth_mol_form_comp = Param(
             self.component_list,
@@ -227,7 +266,7 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # Particle size
         self.particle_dia = Var(
             domain=Reals,
-            initialize=1.5e-3,
+            initialize=1.5e-3, #05.03.23 KO We are typically at 300 microns = 300e-6 = 3e-4
             doc="Diameter of solid particles [m]",
             units=pyunits.m,
         )
@@ -237,7 +276,7 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # Minimum fluidization velocity - EPAT value used for Davidson model
         self.velocity_mf = Var(
             domain=Reals,
-            initialize=0.039624,
+            initialize=0.039624, #05.03.23 KO This is a variable we want to solve for...i.e. what is the best size of bed
             doc="Velocity at minimum fluidization [m/s]",
             units=pyunits.m / pyunits.s,
         )
@@ -247,7 +286,7 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # estimate from ergun equation results (0.4) are suspicious
         self.voidage_mf = Var(
             domain=Reals,
-            initialize=0.45,
+            initialize=0.45, #05.03.23 KO OK for now
             doc="Voidage at minimum fluidization [-]",
             units=pyunits.dimensionless,
         )
@@ -256,7 +295,7 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # Voidage of the bed
         self.voidage = Var(
             domain=Reals,
-            initialize=0.35,
+            initialize=0.35, #05.03.23 KO OK for now
             doc="Voidage [-]",
             units=pyunits.dimensionless,
         )
@@ -265,7 +304,7 @@ class PhysicalParameterData(PhysicalParameterBlock):
         # Particle thermal conductivity
         self.therm_cond_sol = Var(
             domain=Reals,
-            initialize=12.3,
+            initialize=12.3, #05.03.23 KO OK for now
             doc="Thermal conductivity of solid particles [J/m.K.s]",
             units=pyunits.J / pyunits.m / pyunits.K / pyunits.s,
         )
@@ -564,7 +603,7 @@ class SolidPhaseStateBlockData(StateBlockData):
         units_meta = self._params.get_metadata().derived_units
         self.dens_mass_particle = Var(
             domain=Reals,
-            initialize=3251.75,
+            initialize=3251.75, #05.03.23 KO OK for now
             doc="Particle density of oxygen carrier",
             units=units_meta.DENSITY_MASS,
         )

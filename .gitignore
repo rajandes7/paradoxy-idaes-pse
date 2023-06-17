@@ -134,3 +134,5 @@ docs/apidoc/
 # Mac OSX
 .DS_Store
 
+# IDAES examples
+examples/

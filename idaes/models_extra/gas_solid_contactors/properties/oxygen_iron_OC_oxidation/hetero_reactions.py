@@ -125,9 +125,9 @@ class ReactionParameterData(ReactionParameterBlock):
             ("R1", "Vap", "N2"): 0,
             ("R1", "Vap", "CO2"): 0,
             ("R1", "Vap", "H2O"): 0,
-            ("R1", "Sol", "Fe2O3"): 6,
-            ("R1", "Sol", "Fe3O4"): -4,
-            ("R1", "Sol", "Al2O3"): 0,
+            ("R1", "Sol", "CuO"): 6,
+            ("R1", "Sol", "Cu2O"): -4,
+            ("R1", "Sol", "SiO2"): 0,
         }
 
         # Standard Heat of Reaction - J/mol_rxn
@@ -357,7 +357,7 @@ class _ReactionBlock(ReactionBlockBase):
 @declare_process_block_class("ReactionBlock", block_class=_ReactionBlock)
 class ReactionBlockData(ReactionBlockDataBase):
     """
-    Heterogeneous reaction package for methane reacting with Fe2O3 based OC
+    Heterogeneous reaction package for methane reacting with Cu2O based OC
     """
 
     # Create Class ConfigBlock
@@ -488,18 +488,18 @@ class ReactionBlockData(ReactionBlockDataBase):
             return (
                 b.OC_conv
                 * (
-                    b.solid_state_ref.mass_frac_comp["Fe2O3"]
+                    b.solid_state_ref.mass_frac_comp["CuO"]
                     + (
-                        b.solid_state_ref._params.mw_comp["Fe2O3"]
-                        / b.solid_state_ref._params.mw_comp["Fe3O4"]
+                        b.solid_state_ref._params.mw_comp["CuO"]
+                        / b.solid_state_ref._params.mw_comp["Cu2O"]
                     )
                     * (
-                        b._params.rate_reaction_stoichiometry["R1", "Sol", "Fe2O3"]
-                        / -b._params.rate_reaction_stoichiometry["R1", "Sol", "Fe3O4"]
+                        b._params.rate_reaction_stoichiometry["R1", "Sol", "CuO"]
+                        / -b._params.rate_reaction_stoichiometry["R1", "Sol", "Cu2O"]
                     )
-                    * b.solid_state_ref.mass_frac_comp["Fe3O4"]
+                    * b.solid_state_ref.mass_frac_comp["Cu2O"]
                 )
-                == b.solid_state_ref.mass_frac_comp["Fe2O3"]
+                == b.solid_state_ref.mass_frac_comp["CuO"]
             )
 
         try:
@@ -542,12 +542,12 @@ class ReactionBlockData(ReactionBlockDataBase):
 
         def rate_rule(b, r):
             return b.reaction_rate[r] == b._params._scale_factor_rxn * (
-                b.solid_state_ref.mass_frac_comp["Fe3O4"]
+                b.solid_state_ref.mass_frac_comp["Cu2O"]
                 * (1 - b.solid_state_ref.particle_porosity)
                 * b.solid_state_ref.dens_mass_skeletal
-                * (b._params.a_vol / (b.solid_state_ref._params.mw_comp["Fe3O4"]))
+                * (b._params.a_vol / (b.solid_state_ref._params.mw_comp["Cu2O"]))
                 * 3
-                * -b._params.rate_reaction_stoichiometry["R1", "Sol", "Fe3O4"]
+                * -b._params.rate_reaction_stoichiometry["R1", "Sol", "Cu2O"]
                 * b.k_rxn[r]
                 * (
                     (
@@ -558,7 +558,7 @@ class ReactionBlockData(ReactionBlockDataBase):
                 )
                 * b.OC_conv_temp
                 / (b._params.dens_mol_sol * b._params.grain_radius)
-                / (-b._params.rate_reaction_stoichiometry["R1", "Sol", "Fe3O4"])
+                / (-b._params.rate_reaction_stoichiometry["R1", "Sol", "Cu2O"])
             )
 
         try:
